@@ -13,7 +13,7 @@
   width: 100%;
   height: 100%;
   z-index: -1;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #6366f1 0%, #a766e7 100%);
   overflow: hidden;
 }
 
@@ -25,9 +25,15 @@
 
 .shape {
   position: absolute;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  animation: float 6s ease-in-out infinite;
+  /* four-edged star using clip-path */
+  background: rgba(255, 255, 255, 0.32);
+  -webkit-clip-path: polygon(50% 0%, 65% 35%, 100% 50%, 65% 65%, 50% 100%, 35% 65%, 0% 50%, 35% 35%);
+  clip-path: polygon(50% 0%, 65% 35%, 100% 50%, 65% 65%, 50% 100%, 35% 65%, 0% 50%, 35% 35%);
+  transform-origin: center;
+  animation: floatStar 8s linear infinite;
+  will-change: transform, opacity;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .shape-1 {
@@ -94,6 +100,38 @@
   animation-delay: 0.5s;
 }
 
+.shape-9 {
+  width: 40px;
+  height: 40px;
+  top: 22%;
+  left: 50%;
+  animation-delay: 3.2s;
+}
+
+.shape-10 {
+  width: 140px;
+  height: 140px;
+  bottom: 8%;
+  right: 18%;
+  animation-delay: 5.1s;
+}
+
+.shape-11 {
+  width: 30px;
+  height: 30px;
+  top: 48%;
+  right: 46%;
+  animation-delay: 1.9s;
+}
+
+.shape-12 {
+  width: 64px;
+  height: 64px;
+  bottom: 30%;
+  left: 6%;
+  animation-delay: 4.6s;
+}
+
 .particles {
   position: absolute;
   width: 100%;
@@ -104,14 +142,32 @@
   position: absolute;
   width: 4px;
   height: 4px;
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(247, 29, 255, 0.227);
   border-radius: 50%;
   animation: particleFloat 8s ease-in-out infinite;
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-20px) rotate(180deg); }
+@keyframes floatStar {
+  0% {
+    transform: translateY(0px) scale(0.95) rotate(0deg);
+    opacity: 0.25;
+  }
+  25% {
+    transform: translateY(-18px) scale(1.03) rotate(90deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-26px) scale(0.98) rotate(180deg);
+    opacity: 0.95;
+  }
+  75% {
+    transform: translateY(-12px) scale(1.02) rotate(270deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0px) scale(0.95) rotate(360deg);
+    opacity: 0.25;
+  }
 }
 
 @keyframes particleFloat {
@@ -172,7 +228,7 @@ section {
 
 .section-header p {
   font-size: 1.3rem;
-  color: #6b7280;
+  color: #5382df;
   max-width: 600px;
   margin: 0 auto;
 }
@@ -186,7 +242,7 @@ section {
 
 /* Enhanced Welcome Section */
 .welcome-section {
-  background: rgba(255, 255, 255, 0.95);
+  background: white;
   backdrop-filter: blur(20px);
   border-radius: 24px;
   padding: 3rem;
@@ -212,7 +268,7 @@ section {
 .welcome-header h1 {
   font-size: 3.5rem;
   margin-bottom: 1rem;
-  color: #1f2937;
+  color: #2a094a;
   font-weight: 800;
   line-height: 1.1;
   flex: 1;
@@ -234,12 +290,12 @@ section {
 
 .weather-temp {
   font-weight: 600;
-  color: #6366f1;
+  color: #080000;
 }
 
 .welcome-subtitle {
   font-size: 1.3rem;
-  color: #6b7280;
+  color: #797878;
   margin-bottom: 2rem;
   line-height: 1.6;
   font-style: italic;
@@ -248,33 +304,29 @@ section {
 /* Daily Goal Progress */
 .daily-goal {
   background: #f8fafc;
-  padding: 1.5rem;
+  padding: 1rem 1.25rem;
   border-radius: 12px;
   margin-bottom: 2rem;
   border: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
 }
-
 .goal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.75rem;
+  width: 100%;
+  margin-bottom: 0.5rem;
   font-weight: 600;
   color: #374151;
 }
 
 .goal-progress-bar {
-  height: 8px;
-  background: #e5e7eb;
-  border-radius: 4px;
-  overflow: hidden;
+  display:none; /* old bar hidden */
 }
 
-.goal-progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #10b981, #34d399);
-  border-radius: 4px;
-  transition: width 0.5s ease;
+.goal-graph-wrapper{
+  width:100%;
 }
 
 .welcome-actions {
@@ -288,29 +340,21 @@ section {
   justify-content: center;
 }
 
-.productivity-card {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  padding: 2rem;
-  border-radius: 20px;
-  text-align: center;
-  color: white;
-  box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
-  width: 100%;
-  max-width: 280px;
+.welcome-visual {
+  position: relative;
+  align-items: center;
 }
 
-.score-circle {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 1rem;
-  position: relative;
-  border: 3px solid rgba(255, 255, 255, 0.3);
+.blocknote-image {
+  width: 220px;
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+  margin-left: 1rem;
+  transform: translateX(0);
 }
+
 
 .score-value {
   font-size: 2rem;
@@ -1190,7 +1234,7 @@ section {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.05), transparent);
+  background: linear-gradient(90deg, transparent, rgba(188, 189, 222, 0.05), transparent);
   transition: left 0.5s;
 }
 
@@ -1375,6 +1419,12 @@ section {
     flex-direction: column;
     gap: 1rem;
   }
+
+  .blocknote-image {
+    width: 180px;
+    margin-left: 0;
+    margin-top: 1rem;
+  }
 }
 
 @media (max-width: 768px) {
@@ -1472,5 +1522,9 @@ section {
   
   .feature-demo.active {
     transform: scale(0.8);
+  }
+
+  .blocknote-image {
+    display: none;
   }
 }

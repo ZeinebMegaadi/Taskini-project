@@ -167,7 +167,7 @@
 
 @media (min-width: 769px) {
   .sidebar {
-    transform: translateX(0);
+   
   }
   
   .sidebar-overlay {
@@ -182,5 +182,30 @@
 @media (max-width: 768px) {
   .sidebar {
     width: 260px;
+  }
+}
+.sidebar-toggle {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 1100;
+  background: #6366f1;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  font-size: 1.2rem;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.3s, background-color 0.3s;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.sidebar-toggle.open {
+  transform: translateX(260px);
+}
+
+@media (max-width: 768px) {
+  .sidebar-toggle.open {
+    transform: translateX(240px);
   }
 }

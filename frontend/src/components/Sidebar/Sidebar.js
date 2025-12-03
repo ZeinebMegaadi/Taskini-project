@@ -10,9 +10,15 @@ const Sidebar = ({ isOpen, onClose }) => {
     return location.pathname === path;
   };
 
+  // Close only on mobile (<768px)
+  const handleMobileClose = () => {
+    if (window.innerWidth < 768) onClose();
+  };
+
   return (
     <>
       {isOpen && <div className="sidebar-overlay" onClick={onClose}></div>}
+
       <div className={`sidebar ${isOpen ? 'sidebar-open' : ''}`}>
         <div className="sidebar-header">
           <h2>Taskini</h2>
@@ -31,6 +37,7 @@ const Sidebar = ({ isOpen, onClose }) => {
               {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
             </div>
           )}
+
           <div className="sidebar-user-info">
             <p className="sidebar-user-name">{user.name || 'User'}</p>
             <p className="sidebar-user-email">{user.email || ''}</p>
@@ -41,39 +48,42 @@ const Sidebar = ({ isOpen, onClose }) => {
           <Link 
             to="/" 
             className={`sidebar-link ${isActive('/') ? 'active' : ''}`}
-            onClick={onClose}
+            onClick={handleMobileClose}
           >
-            <span className="sidebar-icon">🏠</span>
+            <span className="sidebar-icon"></span>
             Home
           </Link>
+
           <Link 
             to="/tasks" 
             className={`sidebar-link ${isActive('/tasks') ? 'active' : ''}`}
-            onClick={onClose}
+            onClick={handleMobileClose}
           >
-            <span className="sidebar-icon">📋</span>
+            <span className="sidebar-icon"></span>
             My Tasks
           </Link>
+
           <Link 
             to="/calendar" 
             className={`sidebar-link ${isActive('/calendar') ? 'active' : ''}`}
-            onClick={onClose}
+            onClick={handleMobileClose}
           >
-            <span className="sidebar-icon">📅</span>
+            <span className="sidebar-icon"></span>
             Calendar
           </Link>
+
           <Link 
             to="/profile" 
             className={`sidebar-link ${isActive('/profile') ? 'active' : ''}`}
-            onClick={onClose}
+            onClick={handleMobileClose}
           >
-            <span className="sidebar-icon">👤</span>
+            <span className="sidebar-icon"></span>
             Profile
           </Link>
         </nav>
 
         <div className="sidebar-footer">
-          <p className="sidebar-version">Taskini v1.0</p>
+          <p className="sidebar-version">Taskini</p>
         </div>
       </div>
     </>

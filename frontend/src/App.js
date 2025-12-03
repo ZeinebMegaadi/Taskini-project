@@ -21,13 +21,9 @@ function App() {
       setIsAuthenticated(!!localStorage.getItem('token'));
     };
 
-    // Check auth on mount
     checkAuth();
 
-    // Listen for storage changes (for logout/login)
     window.addEventListener('storage', checkAuth);
-    
-    // Custom event for auth changes
     window.addEventListener('authChange', checkAuth);
 
     return () => {
@@ -40,40 +36,55 @@ function App() {
     <Router>
       <div className="App">
         <Header onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
+
         <div className="app-layout">
-          {isAuthenticated && <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />}
+
+          {/* === ARROW BUTTON TOGGLE === */}
+          {isAuthenticated && (
+            <button
+              className={`sidebar-toggle ${sidebarOpen ? 'open' : ''}`}
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+            >
+              {sidebarOpen ? '←' : '→'}
+            </button>
+          )}
+
+          {/* SIDEBAR */}
+          {isAuthenticated && (
+            <Sidebar 
+              isOpen={sidebarOpen} 
+              onClose={() => setSidebarOpen(false)} 
+            />
+          )}
+
+          {/* MAIN */}
           <main className={`main-content ${isAuthenticated ? 'with-sidebar' : ''}`}>
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
-              <Route 
-                path="/tasks" 
-                element={
-                  <ProtectedRoute>
-                    <TasksPage />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route
-                path="/calendar"
-                element={
-                  <ProtectedRoute>
-                    <CalendarPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route 
-                path="/profile" 
-                element={
-                  <ProtectedRoute>
-                    <ProfilePage />
-                  </ProtectedRoute>
-                } 
-              />
+
+              <Route path="/tasks" element={
+                <ProtectedRoute>
+                  <TasksPage />
+                </ProtectedRoute>
+              }/>
+
+              <Route path="/calendar" element={
+                <ProtectedRoute>
+                  <CalendarPage />
+                </ProtectedRoute>
+              }/>
+
+              <Route path="/profile" element={
+                <ProtectedRoute>
+                  <ProfilePage />
+                </ProtectedRoute>
+              }/>
             </Routes>
           </main>
         </div>
+
         <Footer />
       </div>
     </Router>

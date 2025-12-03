@@ -1,0 +1,49 @@
+.sleeping-cat{
+  position:absolute;
+  right:28px;
+  bottom:8px;
+  width:140px;
+  height:auto;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  cursor:pointer;
+  user-select:none;
+  z-index:30;
+}
+
+.sleeping-cat .cat-svg{width:140px;height:auto;overflow:visible}
+.sleeping-cat .cat-body{transform-origin:60px 48px}
+.sleeping-cat.awake .cat-body{animation:cat-breathe 900ms ease-in-out 1}
+.sleeping-cat .cat-tail{transform-origin:98px 34px; animation:tail-flick 4s ease-in-out infinite}
+
+.meow-bubble{
+  position:absolute;
+  right:100%;
+  bottom:60px;
+  background: #111827;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.2);
+  white-space:nowrap;
+}
+
+@keyframes cat-breathe{
+  0%{transform:translateY(0) scaleY(1)}
+  50%{transform:translateY(-3px) scaleY(1.02)}
+  100%{transform:translateY(0) scaleY(1)}
+}
+
+@keyframes tail-flick{
+  0%,70%{transform:rotate(0deg)}
+  76%{transform:rotate(-12deg)}
+  80%{transform:rotate(8deg)}
+  100%{transform:rotate(0deg)}
+}
+
+@media (max-width:900px){
+  .sleeping-cat{width:120px;right:12px;bottom:6px}
+  .sleeping-cat .cat-svg{width:120px}
+}

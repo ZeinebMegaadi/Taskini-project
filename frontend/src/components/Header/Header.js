@@ -29,7 +29,9 @@ const Header = ({ onMenuClick }) => {
           </button>
         )}
         <Link to="/" className="logo">
-          <h1>Taskini</h1>
+          <Link to="/" className="logo">
+  <h1 className="taskini-logo">Taskini</h1>
+</Link>
         </Link>
         <nav className="nav">
           <Link to="/" className="nav-link">Home</Link>

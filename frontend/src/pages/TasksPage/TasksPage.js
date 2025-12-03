@@ -17,7 +17,6 @@ const TasksPage = () => {
   const [selectedTask, setSelectedTask] = useState(null);
   const [showTaskDetails, setShowTaskDetails] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState('dueDate');
   const [selectedTasks, setSelectedTasks] = useState(new Set());
   const navigate = useNavigate();
 
@@ -255,21 +254,7 @@ const TasksPage = () => {
       task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (task.description && task.description.toLowerCase().includes(searchTerm.toLowerCase()))
     )
-    .sort((a, b) => {
-      switch (sortBy) {
-        case 'dueDate':
-          return new Date(a.dueDate) - new Date(b.dueDate);
-        case 'priority':
-          const priorityOrder = { high: 3, medium: 2, low: 1 };
-          return priorityOrder[b.priority] - priorityOrder[a.priority];
-        case 'title':
-          return a.title.localeCompare(b.title);
-        case 'createdAt':
-          return new Date(b.createdAt) - new Date(a.createdAt);
-        default:
-          return 0;
-      }
-    });
+    ;
 
   const tasksForSelectedDate = getTasksForSelectedDate();
 
@@ -342,27 +327,29 @@ const TasksPage = () => {
       {/* Enhanced Filters and Search */}
       <div className="tasks-controls">
         <div className="search-box">
-          <input
-            type="text"
-            placeholder="🔍 Search tasks..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input"
-          />
+          <div className="search-input-wrapper">
+            <span className="search-icon" aria-hidden>🔍</span>
+            <input
+              type="text"
+              placeholder="Search tasks..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input"
+              aria-label="Search tasks"
+            />
+            {searchTerm && (
+              <button
+                className="search-clear"
+                onClick={() => setSearchTerm('')}
+                aria-label="Clear search"
+              >
+                ✕
+              </button>
+            )}
+          </div>
         </div>
         
         <div className="controls-right">
-          <select 
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="sort-select"
-          >
-            <option value="dueDate">Sort by Due Date</option>
-            <option value="priority">Sort by Priority</option>
-            <option value="title">Sort by Title</option>
-            <option value="createdAt">Sort by Created</option>
-          </select>
-
           <div className="tasks-filters">
             <button 
               className={`filter-btn ${filter === 'all' ? 'active' : ''}`}

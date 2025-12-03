@@ -386,11 +386,6 @@
   text-overflow: ellipsis;
 }
 
-.task-item:hover {
-  transform: translateX(2px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
 .task-item.pending {
   background: #fef3c7;
   color: #92400e;

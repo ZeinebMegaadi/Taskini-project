@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../../utils/api';
 import './HomePage.css';
+// use inline Blocknote component to ensure animations run reliably
+import Blocknote from '../../components/Blocknote/Blocknote';
+import GoalGraph from '../../components/GoalGraph/GoalGraph';
 
 const HomePage = () => {
   const [user, setUser] = useState(null);
@@ -9,6 +12,7 @@ const HomePage = () => {
   const [recentTasks, setRecentTasks] = useState([]);
   const [upcomingTasks, setUpcomingTasks] = useState([]);
   const [productivityScore, setProductivityScore] = useState(0);
+  const [allTasks, setAllTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeFeature, setActiveFeature] = useState(0);
   const [weather, setWeather] = useState({ temp: 72, condition: 'sunny' });
@@ -61,6 +65,7 @@ const HomePage = () => {
     try {
       const response = await api.get('/tasks');
       if (response.data.success) {
+        setAllTasks(response.data.data || []);
         const tasks = response.data.data;
         calculateStats(tasks);
         getRecentTasks(tasks);
@@ -114,10 +119,42 @@ const HomePage = () => {
         createdAt: new Date().toISOString()
       }
     ];
+    setAllTasks(mockTasks);
     calculateStats(mockTasks);
     getRecentTasks(mockTasks);
     getUpcomingTasks(mockTasks);
     calculateProductivity(mockTasks);
+  };
+
+  const getLast7Counts = () => {
+    const arr = [];
+    const today = new Date();
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - i);
+      d.setHours(0,0,0,0);
+      const count = (allTasks || []).filter(task => {
+        // Count tasks that were completed on that day; fall back to createdAt for counting if updatedAt missing
+        const time = task.updatedAt || task.createdAt || task.dueDate;
+        if (!time) return false;
+        const t = new Date(time);
+        t.setHours(0,0,0,0);
+        return t.getTime() === d.getTime() && task.status === 'completed';
+      }).length;
+      arr.push(count);
+    }
+    return arr;
+  };
+
+  const getTaskDistribution = () => {
+    const dist = { completed: 0, 'in-progress': 0, pending: 0, other: 0 };
+    (allTasks || []).forEach(t => {
+      if (t.status === 'completed') dist.completed += 1;
+      else if (t.status === 'in-progress') dist['in-progress'] += 1;
+      else if (t.status === 'pending') dist.pending += 1;
+      else dist.other += 1;
+    });
+    return dist;
   };
 
   const calculateStats = (tasks) => {
@@ -257,26 +294,16 @@ const HomePage = () => {
             <div className="welcome-content">
               <div className="welcome-text">
                 <div className="welcome-header">
-                  <h1>{getGreeting()}, {user.name}! 🌟</h1>
-                  <div className="weather-widget">
-                    <span className="weather-icon">{getWeatherIcon(weather.condition)}</span>
-                    <span className="weather-temp">{weather.temp}°F</span>
-                  </div>
+                  <h1>{getGreeting()}, {user.name}! </h1>
                 </div>
                 <p className="welcome-subtitle">{getMotivationalQuote()}</p>
                 
-                {/* Daily Goal Progress */}
+                {/* Daily Goal Progress (graph) */}
                 <div className="daily-goal">
-                  <div className="goal-header">
-                    <span>Daily Goal Progress</span>
-                    <span>{Math.round(getDailyGoalProgress())}%</span>
-                  </div>
-                  <div className="goal-progress-bar">
-                    <div 
-                      className="goal-progress-fill" 
-                      style={{ width: `${getDailyGoalProgress()}%` }}
-                    ></div>
-                  </div>
+                  <GoalGraph
+                    history={getLast7Counts()}
+                    distribution={getTaskDistribution()}
+                  />
                 </div>
 
                 <div className="welcome-actions">
@@ -303,19 +330,13 @@ const HomePage = () => {
                   </button>
                 </div>
               </div>
-              <div className="welcome-visual">
+                <div className="welcome-visual">
                 <div className="productivity-card">
                   <div className="productivity-score">
-                    <div className="score-circle">
-                      <span className="score-value">{productivityScore}%</span>
-                    </div>
-                    <p>Productivity Score</p>
-                  </div>
-                  <div className="focus-time">
-                    <span className="focus-icon">⏱️</span>
-                    <span className="focus-text">{Math.floor(focusTime / 60)}h {focusTime % 60}m focused today</span>
+                    <div className="score-circle"></div>
                   </div>
                 </div>
+                <Blocknote className="blocknote-image" />
               </div>
             </div>
           </section>
@@ -390,18 +411,6 @@ const HomePage = () => {
                   >
                     <span className="action-icon">👤</span>
                     <span className="action-text">Profile</span>
-                  </button>
-                  <button className="quick-action-btn">
-                    <span className="action-icon">🎵</span>
-                    <span className="action-text">Focus Music</span>
-                  </button>
-                  <button className="quick-action-btn">
-                    <span className="action-icon"></span>
-                    <span className="action-text">Quick Note</span>
-                  </button>
-                  <button className="quick-action-btn">
-                    <span className="action-icon"></span>
-                    <span className="action-text">Sync Now</span>
                   </button>
                 </div>
               </div>
